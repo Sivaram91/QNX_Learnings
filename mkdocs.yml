@@ -25,8 +25,8 @@ theme:
   features:
     - navigation.instant
     - navigation.tracking
+    - navigation.tabs
     - navigation.sections
-    - navigation.indexes
     - navigation.top
     - navigation.footer
     - toc.follow
@@ -55,11 +55,5 @@ markdown_extensions:
       alternate_style: true
 
 nav:
-  - Home: index.md
-  - Raspberry Pi:
-    - raspberry-pi/index.md
-    - Host setup: raspberry-pi/host-setup.md
-    - Flash and first boot: raspberry-pi/flashing.md
-    - WiFi: raspberry-pi/wifi.md
-    - Security and SSH: raspberry-pi/security-ssh.md
-    - Build and run: raspberry-pi/build-run.md
+  - Setup & Tooling:
+    - QNX 8.0 on Raspberry Pi: setup/qnx-pi-setup-notes.md

@@ -1,0 +1,1220 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Personal notes and learnings about QNX">
+      
+      
+      
+        <link rel="canonical" href="https://sivaram91.github.io/QNX_Learnings/setup/qnx-pi-setup-notes/">
+      
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.0">
+    
+    
+      
+        <title>QNX 8.0 on Raspberry Pi - QNX Learnings</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.57a0d79d.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.fb2fffe2.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#qnx-80-on-raspberry-pi-dev-setup-notes" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="QNX Learnings" class="md-header__button md-logo" aria-label="QNX Learnings" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            QNX Learnings
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              QNX 8.0 on Raspberry Pi
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/Sivaram91/QNX_Learnings" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    Sivaram91/QNX_Learnings
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="./" class="md-tabs__link">
+          
+  
+  
+  Setup & Tooling
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="QNX Learnings" class="md-nav__button md-logo" aria-label="QNX Learnings" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    QNX Learnings
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/Sivaram91/QNX_Learnings" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    Sivaram91/QNX_Learnings
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_1" id="__nav_1_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Setup & Tooling
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_1_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_1">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Setup & Tooling
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    QNX 8.0 on Raspberry Pi
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    QNX 8.0 on Raspberry Pi
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#current-state-verified-working" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Current state (verified working)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#environment" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Environment
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#setup-steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Setup steps
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Setup steps">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-host-license-and-sdp" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Host: license and SDP
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-get-the-pi-image" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Get the Pi image
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-flash-the-sd-card" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Flash the SD card
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-first-boot" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. First boot
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-configure-wifi" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Configure WiFi
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. Configure WiFi">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#option-a-on-the-pc-via-the-sd-card" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Option A — on the PC (via the SD card)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#option-b-on-the-pi-with-commands" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Option B — on the Pi (with commands)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#check-the-connection" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Check the connection
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#6-secure-the-defaults" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Secure the defaults
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#7-ssh-from-the-pc" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. SSH from the PC
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#8-add-the-pi-as-a-target-in-the-qnx-toolkit" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Add the Pi as a target in the QNX Toolkit
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#9-set-the-build-architecture-to-aarch64le" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. Set the build architecture to aarch64le
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#10-build-and-run" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10. Build and run
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#verifying-code-actually-runs-on-the-pi" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Verifying code actually runs on the Pi
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#next-steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Next steps
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#references" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        References
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#current-state-verified-working" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Current state (verified working)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#environment" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Environment
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#setup-steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Setup steps
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Setup steps">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-host-license-and-sdp" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Host: license and SDP
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-get-the-pi-image" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Get the Pi image
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-flash-the-sd-card" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Flash the SD card
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-first-boot" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. First boot
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-configure-wifi" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Configure WiFi
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. Configure WiFi">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#option-a-on-the-pc-via-the-sd-card" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Option A — on the PC (via the SD card)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#option-b-on-the-pi-with-commands" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Option B — on the Pi (with commands)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#check-the-connection" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Check the connection
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#6-secure-the-defaults" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Secure the defaults
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#7-ssh-from-the-pc" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. SSH from the PC
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#8-add-the-pi-as-a-target-in-the-qnx-toolkit" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Add the Pi as a target in the QNX Toolkit
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#9-set-the-build-architecture-to-aarch64le" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. Set the build architecture to aarch64le
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#10-build-and-run" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10. Build and run
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#verifying-code-actually-runs-on-the-pi" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Verifying code actually runs on the Pi
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#next-steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Next steps
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#references" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        References
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+    <a href="https://github.com/Sivaram91/QNX_Learnings/edit/main/docs/setup/qnx-pi-setup-notes.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"/></svg>
+    </a>
+  
+  
+
+
+<h1 id="qnx-80-on-raspberry-pi-dev-setup-notes">QNX 8.0 on Raspberry Pi — Dev Setup Notes<a class="headerlink" href="#qnx-80-on-raspberry-pi-dev-setup-notes" title="Permanent link">&para;</a></h1>
+<p>Working setup as of 2026-11-04<br />
+Build on Windows PC (VS Code + QNX Toolkit)<br />
+Deploy and run on Raspberry Pi 4 running QNX 8.0.</p>
+<h2 id="current-state-verified-working">Current state (verified working)<a class="headerlink" href="#current-state-verified-working" title="Permanent link">&para;</a></h2>
+<ul class="task-list">
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> QNX 8.0 image flashed and booting on the Pi</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> Pi connected to WiFi</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> SSH from PC to Pi works</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> QNX Toolkit detects the Pi as target <code>qnxpi</code> (aarch64le)</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> Build on PC → upload → run on Pi via <strong>Run as QNX Application</strong></li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Debugging (breakpoints / stepping on target) — next step</li>
+</ul>
+<h2 id="environment">Environment<a class="headerlink" href="#environment" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Item</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Host</td>
+<td>Windows, VS Code + QNX Toolkit extension</td>
+</tr>
+<tr>
+<td>SDP</td>
+<td>QNX SDP 8.0 at <code>%USERPROFILE%\qnx800</code></td>
+</tr>
+<tr>
+<td>Board</td>
+<td>Raspberry Pi 4</td>
+</tr>
+<tr>
+<td>Target image</td>
+<td>QNX 8.0 Quick Start Target Image (QSTI) for RPi4</td>
+</tr>
+<tr>
+<td>Target name</td>
+<td><code>qnxpi</code></td>
+</tr>
+<tr>
+<td>Target arch</td>
+<td><code>aarch64le</code></td>
+</tr>
+<tr>
+<td>Test project</td>
+<td><code>Trial</code> (CMake)</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="setup-steps">Setup steps<a class="headerlink" href="#setup-steps" title="Permanent link">&para;</a></h2>
+<h3 id="1-host-license-and-sdp">1. Host: license and SDP<a class="headerlink" href="#1-host-license-and-sdp" title="Permanent link">&para;</a></h3>
+<ol>
+<li>Create a myQNX account and get the free non-commercial <strong>QNX SDP 8.0</strong> license at <a href="https://qnx.com/getqnx">qnx.com/getqnx</a>. Accept and deploy it to the corresponding email ID</li>
+<li>Install the <strong>QNX Software Center (QSC)</strong>, login with same email ID in QSC</li>
+<li>In QSC, install <strong>QNX SDP 8.0.5</strong> (<code>com.qnx.qnx800</code>). (Note: Earlier versions shown above might be inaccessible, scroll down to the latest version and install it)</li>
+<li>Install <strong>VS Code</strong> and the <strong>QNX Toolkit</strong> extension, and point it at the SDP install.</li>
+</ol>
+<h3 id="2-get-the-pi-image">2. Get the Pi image<a class="headerlink" href="#2-get-the-pi-image" title="Permanent link">&para;</a></h3>
+<p>In QSC, install the RPi4 quick start image package <code>com.qnx.qnx800.quickstart.rpi4</code>
+(Updates → QNX Software Development Platform → Reference Images).</p>
+<p>It lands in <code>%USERPROFILE%\qnx800\images</code> (Windows) or <code>~/qnx800/images</code> (Linux), follow the Readme.md to generate the img file</p>
+<h3 id="3-flash-the-sd-card">3. Flash the SD card<a class="headerlink" href="#3-flash-the-sd-card" title="Permanent link">&para;</a></h3>
+<p>Use <strong>Raspberry Pi Imager</strong>:</p>
+<table>
+<thead>
+<tr>
+<th>Setting</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Device</td>
+<td>Raspberry Pi 4B</td>
+</tr>
+<tr>
+<td>Operating System</td>
+<td>Use custom → select the <code>.img</code></td>
+</tr>
+<tr>
+<td>Storage</td>
+<td>the SD card</td>
+</tr>
+</tbody>
+</table>
+<p>Click NEXT → WRITE to confirm writing the SD card
+The QNX image does its own configuration; Imager customisation doesn't apply.</p>
+<h3 id="4-first-boot">4. First boot<a class="headerlink" href="#4-first-boot" title="Permanent link">&para;</a></h3>
+<ol>
+<li>Insert the card, connect HDMI 0 (next to the USB-C port) and a USB keyboard, power up.</li>
+<li>First boot runs one-time provisioning and takes few minutes. Don't power-cycle it.</li>
+<li>Log in with the default <code>qnxuser</code> / <code>qnxuser</code> (root: <code>root</code> / <code>root</code>).</li>
+</ol>
+<h3 id="5-configure-wifi">5. Configure WiFi<a class="headerlink" href="#5-configure-wifi" title="Permanent link">&para;</a></h3>
+<p>The WiFi config lives in <code>wpa_supplicant.conf</code> on the FAT32 boot partition — <code>/boot/wpa_supplicant.conf</code> on the running Pi.</p>
+<blockquote>
+<p><strong>Edit the <code>/boot</code> copy only.</strong> <code>/data/var/etc/settings/wpa_supplicant.conf</code> is a runtime copy, regenerated from <code>/boot</code> at every boot; changes there are lost.</p>
+</blockquote>
+<p>Config block (same for both options):</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>network={
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    ssid="YourWiFiName"
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>    key_mgmt=WPA-PSK
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>    psk="YourPassword"
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>}
+</code></pre></div>
+<ul>
+<li>SSID is case-sensitive; spaces count. Prefer the <strong>2.4 GHz</strong> network.</li>
+</ul>
+<h4 id="option-a-on-the-pc-via-the-sd-card">Option A — on the PC (via the SD card)<a class="headerlink" href="#option-a-on-the-pc-via-the-sd-card" title="Permanent link">&para;</a></h4>
+<ol>
+<li>Shut down the Pi (<code>sudo shutdown</code>), or do this right after flashing, before first boot.</li>
+<li>Insert the SD card in the PC. The boot partition may <strong>not</strong> show up in Explorer automatically. If it doesn't, assign it a drive letter:</li>
+<li>Press <code>Win + X</code> → <strong>Disk Management</strong>.</li>
+<li>Find the SD card disk (match it by size) and its small <strong>FAT32</strong> partition.</li>
+<li>Right-click that partition → <strong>Change Drive Letter and Paths…</strong> → <strong>Add</strong> → pick a letter → OK.</li>
+<li>The partition now appears in Explorer.</li>
+</ol>
+<blockquote>
+<p>If Windows offers to <strong>format</strong> the disk, click <strong>Cancel</strong>. Don't touch the other (non-FAT) partitions on the card — they hold the QNX system.
+3. Edit (or create) <code>wpa_supplicant.conf</code> there and add the config block.
+4. Put the card back in the Pi and boot.</p>
+</blockquote>
+<p>No keyboard-layout trouble — the easiest option.</p>
+<h4 id="option-b-on-the-pi-with-commands">Option B — on the Pi (with commands)<a class="headerlink" href="#option-b-on-the-pi-with-commands" title="Permanent link">&para;</a></h4>
+<ol>
+<li>Edit the config:
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>sudo<span class="w"> </span>vi<span class="w"> </span>/boot/wpa_supplicant.conf
+</code></pre></div>
+   (<code>i</code> = insert, <code>Esc</code> then <code>:wq</code> = save and quit.)</li>
+<li>Restrict access, since it holds the WiFi password:
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>sudo<span class="w"> </span>chmod<span class="w"> </span><span class="m">600</span><span class="w"> </span>/boot/wpa_supplicant.conf
+</code></pre></div></li>
+<li>Reboot so the system starts WiFi with the new config:
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>sudo<span class="w"> </span>shutdown<span class="w">       </span><span class="c1"># reboots by default on QNX</span>
+</code></pre></div></li>
+</ol>
+<p>To test without rebooting, start it by hand (wpa_supplicant only reads its config at startup):</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>sudo<span class="w"> </span>slay<span class="w"> </span>wpa_supplicant-2.11<span class="w">          </span><span class="c1"># stop the running instance</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>sudo<span class="w"> </span>wpa_supplicant-2.11<span class="w"> </span>-B<span class="w"> </span>-i<span class="w"> </span>bcm0<span class="w"> </span>-c<span class="w"> </span>/boot/wpa_supplicant.conf
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>sudo<span class="w"> </span>dhcpcd<span class="w"> </span>bcm0<span class="w">                       </span><span class="c1"># "/etc/dhcpcd.conf: No such file" is harmless</span>
+</code></pre></div>
+<p>If it doesn't connect, run it in the foreground (drop <code>-B</code>, add <code>-d</code>) to see the error:</p>
+<table>
+<thead>
+<tr>
+<th>Message</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>CTRL-EVENT-CONNECTED</code></td>
+<td>Success</td>
+</tr>
+<tr>
+<td><code>WRONG_KEY</code> / <code>4-Way Handshake failed</code></td>
+<td>Wrong password</td>
+</tr>
+<tr>
+<td><code>No suitable network found</code></td>
+<td>Wrong SSID or 5 GHz-only network</td>
+</tr>
+<tr>
+<td><code>Failed to read or parse configuration</code></td>
+<td>Syntax error (missing <code>"</code> or <code>}</code>)</td>
+</tr>
+</tbody>
+</table>
+<p>Notes for Option B:</p>
+<ul>
+<li>The image uses a US keyboard layout. On a German QWERTZ keyboard, <code>y</code>/<code>z</code> are swapped and symbols (<code>"</code>, <code>=</code>, <code>{</code>, <code>}</code>) sit on their US positions.</li>
+<li>Use absolute paths (<code>/boot/...</code>). A relative path makes <code>wpa_supplicant -B</code> fail silently.</li>
+<li><code>wpa_cli</code> and <code>wpa_passphrase</code> are not on the image.</li>
+</ul>
+<h4 id="check-the-connection">Check the connection<a class="headerlink" href="#check-the-connection" title="Permanent link">&para;</a></h4>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>ifconfig<span class="w"> </span>bcm0<span class="w">     </span><span class="c1"># want: status: associated + an inet address</span>
+</code></pre></div>
+<p>Then sync the clock (it falls back to the image build date, which breaks TLS):</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>sudo<span class="w"> </span>ntpdate<span class="w"> </span>pool.ntp.org
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>date<span class="w">              </span><span class="c1"># shows UTC — correct</span>
+</code></pre></div>
+<h3 id="6-secure-the-defaults">6. Secure the defaults<a class="headerlink" href="#6-secure-the-defaults" title="Permanent link">&para;</a></h3>
+<p>The image ships with default passwords and a VNC server running.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>passwd<span class="w">                          </span><span class="c1"># qnxuser</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>sudo<span class="w"> </span>passwd<span class="w"> </span>root
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>sudo<span class="w"> </span>vncserv<span class="w"> </span>-password<span class="o">=</span>&lt;new&gt;<span class="w">    </span><span class="c1"># VNC</span>
+</code></pre></div>
+<p><code>qconn</code> (remote debug service) is also enabled by default — keep the Pi on the home LAN only.</p>
+<h3 id="7-ssh-from-the-pc">7. SSH from the PC<a class="headerlink" href="#7-ssh-from-the-pc" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>ssh<span class="w"> </span>qnxuser@qnxpi.local
+</code></pre></div>
+<ul>
+<li>Use the Pi's IP if <code>.local</code> doesn't resolve.</li>
+<li>If SSH complains about MAC algorithms, add <code>-m hmac-sha2-256</code> (or put <code>MACs hmac-sha2-256</code> in <code>~/.ssh/config</code>).</li>
+<li>Tip: give the Pi a DHCP reservation in the router so its IP stays stable.</li>
+</ul>
+<h3 id="8-add-the-pi-as-a-target-in-the-qnx-toolkit">8. Add the Pi as a target in the QNX Toolkit<a class="headerlink" href="#8-add-the-pi-as-a-target-in-the-qnx-toolkit" title="Permanent link">&para;</a></h3>
+<p>In the QNX Toolkit view, add a target connection using <code>qnxpi.local</code> (or the Pi's IP). Once connected it shows up as <code>qnxpi (aarch64le)</code>.</p>
+<h3 id="9-set-the-build-architecture-to-aarch64le">9. Set the build architecture to <code>aarch64le</code><a class="headerlink" href="#9-set-the-build-architecture-to-aarch64le" title="Permanent link">&para;</a></h3>
+<p>The Toolkit builds for <strong>x86_64</strong> by default. Running that binary on the Pi fails with:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>Error launching process /tmp/trial
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>Error: Exec format error
+</code></pre></div>
+<p><code>Exec format error</code> = binary built for the wrong CPU architecture.</p>
+<p><strong>Fix:</strong> VS Code Settings → search <code>qnx.arch</code> → set to <code>aarch64le</code> (Workspace level). If present, also set <code>qnx.archList</code> to <code>aarch64le</code> (first entry = default for new projects). Then delete <code>build/</code> and rebuild.</p>
+<h3 id="10-build-and-run">10. Build and run<a class="headerlink" href="#10-build-and-run" title="Permanent link">&para;</a></h3>
+<ol>
+<li>Status bar → <strong>Build</strong> (Build Active Project).</li>
+<li><strong>Run as QNX Application</strong> → the binary is uploaded to <code>/tmp/&lt;name&gt;</code> on the Pi and executed there; stdout is piped back to the VS Code terminal.</li>
+</ol>
+<hr />
+<h2 id="verifying-code-actually-runs-on-the-pi">Verifying code actually runs on the Pi<a class="headerlink" href="#verifying-code-actually-runs-on-the-pi" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;sys/utsname.h&gt;</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;cstdio&gt;</span>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="kt">int</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="w">    </span><span class="n">utsname</span><span class="w"> </span><span class="n">u</span><span class="p">;</span>
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="w">    </span><span class="n">uname</span><span class="p">(</span><span class="o">&amp;</span><span class="n">u</span><span class="p">);</span>
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="w">    </span><span class="n">printf</span><span class="p">(</span><span class="s">"%s %s %s</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span><span class="w"> </span><span class="n">u</span><span class="p">.</span><span class="n">sysname</span><span class="p">,</span><span class="w"> </span><span class="n">u</span><span class="p">.</span><span class="n">nodename</span><span class="p">,</span><span class="w"> </span><span class="n">u</span><span class="p">.</span><span class="n">machine</span><span class="p">);</span><span class="w">  </span><span class="c1">// QNX &lt;hostname&gt; aarch64le</span>
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="p">}</span>
+</code></pre></div>
+<p>On the Pi via SSH:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>ls<span class="w"> </span>-l<span class="w"> </span>/tmp/trial<span class="w">          </span><span class="c1"># uploaded binary</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>pidin<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>trial<span class="w">        </span><span class="c1"># running process (add a sleep() to catch it)</span>
+</code></pre></div>
+<h2 id="next-steps">Next steps<a class="headerlink" href="#next-steps" title="Permanent link">&para;</a></h2>
+<ul class="task-list">
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Commit the working Trial project as a known-good baseline</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Get on-target debugging working (breakpoint + step from VS Code)</li>
+</ul>
+<h2 id="references">References<a class="headerlink" href="#references" title="Permanent link">&para;</a></h2>
+<ul>
+<li><a href="https://www.qnx.com/developers/docs/8.0/com.qnx.doc.qnxtoolkit.user_guide/topic/qnx_toolkit_contribution_points.html">QNX Toolkit contribution points (<code>qnx.arch</code>)</a></li>
+<li><a href="https://www.qnx.com/developers/docs/qnxeverywhere/com.qnx.doc.qnxeverywhere/topic/qsti/interacting-with-the-system.html">QNX Everywhere — Interacting with the system</a></li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.instant", "navigation.tracking", "navigation.tabs", "navigation.sections", "navigation.top", "navigation.footer", "toc.follow", "search.suggest", "search.highlight", "content.code.copy", "content.action.edit"], "search": "../../assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.c21346df.min.js"></script>
+      
+    
+  </body>
+</html>
